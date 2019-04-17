@@ -1,0 +1,6 @@
+{
+    "board": "Maixduino:k210:m1",
+    "configuration": "toolsloc=default, clksrc=600000000L",
+    "port": "/dev/ttyUSB1",
+    "sketch": "robot_k210.ino"
+}
