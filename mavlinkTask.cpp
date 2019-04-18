@@ -287,7 +287,7 @@ void mavlinkTask(void *ctx)
     mavlinkRecive();
 
     mavlink_msg_heartbeat_send(MAVLINK_COMM_0, system_type, autopilot_type, system_mode, custom_mode, system_state);
-    //mavlink_msg_sys_status_send(MAVLINK_COMM_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    mavlink_msg_sys_status_send(MAVLINK_COMM_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
     if (xSemaphoreTake(imuSemaphore, (TickType_t)portMAX_DELAY) == pdTRUE)
     {
@@ -299,7 +299,7 @@ void mavlinkTask(void *ctx)
 
     if (xSemaphoreTake(gpsSemaphore, (TickType_t)portMAX_DELAY) == pdTRUE)
     {
-      if(gps.location.isUpdated()) mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0, gps.time.value(), 3, gps.location.lat() * 1E7, gps.location.lng() * 1E7, gps.altitude.meters() * 1000, gps.hdop.value(), UINT16_MAX, gps.speed.mps() * 100, gps.course.deg() * 100, gps.satellites.value(), UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX);
+      mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0, gps.time.value(), gps.location.age() > 1500 ? 1 : 3, gps.location.lat() * 1E7, gps.location.lng() * 1E7, gps.altitude.meters() * 1000, gps.hdop.value(), UINT16_MAX, gps.speed.mps() * 100, gps.course.deg() * 100, gps.satellites.value(), UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX);
 
       xSemaphoreGive(gpsSemaphore);
     }
